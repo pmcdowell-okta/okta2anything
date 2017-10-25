@@ -1,4 +1,4 @@
-![GitHub Logo](./images/okta2anythinglogo.png)
+![Okta2Anything](./images/okta2anythinglogo.png)
 
 
 ### Description
@@ -11,3 +11,5 @@ IDAAS Service authenticate against almost anything.
 Okta2Anything acts like an LDAP Service. Using the Okta LDAP Agent, and pointing
 the LDAP Agent to Okta2Anything. Okta2Antyhing will delete the authentication
 to a local node.js script that will perform the Authentication
+
+![Okta2Anything](./images/flow.png)
