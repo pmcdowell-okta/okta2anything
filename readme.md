@@ -39,12 +39,21 @@ You will need to download the binary for the Operating System you are running on
 #### Configuring you Okta LDAP Agent
 
 Follow Okta's guides for configuring LDAP, an example of the settings for the LDAP Agent 
-that are compatible for Okta2Anything are available here
+that are compatible for Okta2Anything are available here.
+
+* Select **OpenDJ** Directory from the LDAP Directory drop-down
+* Set User Search Base to: ``ou=People,dc=example,dc=com``
+* Set Passwore Attribute to: ``userpassword``
+* Set Group Search Base to: ``ou=groups,dc=example,dc=com``
+* Set Group Object Class to: ``groupofnames``
+* Set Group Object Filter to: ``(objectclass=groupofnames)``
+* Set Member Attribute to: ``member``
 
 ["LDAP Configuration"](./images/page1.pdf)
 
 ["Import Settings"](./images/page2.pdf)
 
+Test the settings, use username of ``test@example.com``
 
 #### Running the LDAP Proxy
 
