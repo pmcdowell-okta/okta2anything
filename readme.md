@@ -36,4 +36,25 @@ You will need to download the binary for the Operating System you are running on
 | ![Okta2Anything](./images/macos.png)  | [MacOS](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)|   
 | ![Okta2Anything](./images/windows.png)| [Windows](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)  |   
 
-####
+#### Configuring you Okta LDAP Agent
+
+Follow Okta's guides for configuring LDAP, an example of the settings for the LDAP Agent 
+that are compatible for Okta2Anything are available here
+
+[LDAP Settings Page "LDAP Configuration"](./images/page1.pdf)
+[LDAP Settings Page "Import Settings"](./images/page2.pdf)
+
+
+#### Running the LDAP Proxy
+
+``./okta2anything``
+
+Command line Switches:
+
+| switch  |  Description |
+|---|---|
+|  -w |  Set Password for cn=Directory manager (If not specified, anything is accepted)  |
+|  -plugin |  Specify Plugin used for Authentication (node.js Script) |
+
+
+Okta2anything defaults to Port 389
