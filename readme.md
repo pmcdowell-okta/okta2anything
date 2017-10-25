@@ -48,7 +48,11 @@ that are compatible for Okta2Anything are available here
 
 #### Running the LDAP Proxy
 
-Examples:
+Running Examples:
+
+Okta2anything defaults to Port 389 
+
+**On Many Systems, you Must run that as root. sudo ./okta2anything ...**
 
 Command line Switches:
 
@@ -71,4 +75,3 @@ Running with Directory Manager password set to Password1, and Authenticate again
 
 
 
-Okta2anything defaults to Port 389
