@@ -48,6 +48,7 @@ that are compatible for Okta2Anything are available here.
 * Set Group Object Class to: ``groupofnames``
 * Set Group Object Filter to: ``(objectclass=groupofnames)``
 * Set Member Attribute to: ``member``
+* Under Validate Configuration Select Email
 
 ["LDAP Configuration"](./images/page1.pdf)
 
