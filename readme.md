@@ -57,7 +57,7 @@ Command line Switches:
 |  -w |  Set Password for cn=Directory manager (If not specified, anything is accepted)  |
 |  -plugin |  Specify Plugin used for Authentication (node.js Script) |
 
-Running in Promiscuous mode for testing, all users are accepted
+Running in Promiscuous mode for testing, all users are accepted<br/>
 ``./okta2anything -plugin=promiscuous``
 
 Running with Directory Manager password set to Password1, and Authenticate against another Okta Tenant
