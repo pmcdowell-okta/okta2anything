@@ -36,7 +36,7 @@ You will need to download the binary for the Operating System you are running on
 |  OS |   |   
 |---|---|
 | ![Okta2Anything](./images/linux.png)|   |   
-| ![Okta2Anything](./images/macos.png)|   |   
+| ![Okta2Anything](./images/macos.png)| https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux  |   
 | ![Okta2Anything](./images/windows.png)|   |   
 
 ####
