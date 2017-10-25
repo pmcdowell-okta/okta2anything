@@ -30,10 +30,10 @@ your authentication scripts to run need to be installed.
 
 You will need to download the binary for the Operating System you are running on
 
-|  OS |   |   
+|  OS |  Download Link |   
 |---|---|
-| ![Okta2Anything](./images/linux.png)|   |   
-| ![Okta2Anything](./images/macos.png)| [MacOS](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)|   
-| ![Okta2Anything](./images/windows.png)|   |   
+| ![Okta2Anything](./images/linux.png)  | [Linux](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)  |   
+| ![Okta2Anything](./images/macos.png)  | [MacOS](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)|   
+| ![Okta2Anything](./images/windows.png)| [Windows](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)  |   
 
 ####
