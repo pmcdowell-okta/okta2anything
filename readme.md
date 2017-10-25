@@ -48,7 +48,7 @@ that are compatible for Okta2Anything are available here
 
 #### Running the LDAP Proxy
 
-``./okta2anything``
+Examples:
 
 Command line Switches:
 
@@ -56,6 +56,17 @@ Command line Switches:
 |---|---|
 |  -w |  Set Password for cn=Directory manager (If not specified, anything is accepted)  |
 |  -plugin |  Specify Plugin used for Authentication (node.js Script) |
+
+Running in Promiscuous mode for testing, all users are accepted
+``./okta2anything -plugin=promiscuous``
+
+Running with Directory Manager password set to Password1, and Authenticate against another Okta Tenant
+``./okta2anything -w Password1 -plugin=okta2okta``
+
+
+
+
+
 
 
 Okta2anything defaults to Port 389
