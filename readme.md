@@ -41,8 +41,9 @@ You will need to download the binary for the Operating System you are running on
 Follow Okta's guides for configuring LDAP, an example of the settings for the LDAP Agent 
 that are compatible for Okta2Anything are available here
 
-[LDAP Settings Page "LDAP Configuration"](./images/page1.pdf)
-[LDAP Settings Page "Import Settings"](./images/page2.pdf)
+["LDAP Configuration"](./images/page1.pdf)
+
+["Import Settings"](./images/page2.pdf)
 
 
 #### Running the LDAP Proxy
