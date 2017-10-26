@@ -7,7 +7,7 @@ var password = args[1]
 
 var options = {
   "method": "POST",
-  "hostname": "okta.okta.com",
+  "hostname": "companyx.okta.com",
   "port": null,
   "path": "/api/v1/authn",
   "headers": {
