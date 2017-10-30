@@ -28,6 +28,16 @@ to a local node.js script that will perform the Authentication
 An Okta LDAP Agent is required, and node.js and any required artifacts needed for
 your authentication scripts to run need to be installed.
 
+
+
+Here is a Direct Link to the Okta LDAP Agent: 
+* Linux Agent (RPM) https://companyx-admin.okta.com/static/ldap-agent/OktaLDAPAgent-05.03.12.x86_64.rpm
+* Windows Agent (exe) https://companyx-admin.okta.com/static/ldap-agent/OktaLDAPAgent-05.03.12_x64.exe
+
+Node.js is required, Node is basically be using as a Shell Script.
+
+Downlaod Node.js https://nodejs.org/en/
+
 You will need to download the binary for the Operating System you are running on
 
 |  OS |  Download Link |   
