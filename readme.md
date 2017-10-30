@@ -42,9 +42,9 @@ You will need to download the binary for the Operating System you are running on
 
 |  OS |  Download Link |   
 |---|---|
-| ![Okta2Anything](./images/linux.png)  | [Linux](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)  |   
-| ![Okta2Anything](./images/macos.png)  | [MacOS](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)|   
-| ![Okta2Anything](./images/windows.png)| [Windows](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux)  |   
+| ![Okta2Anything](./images/linux.png)  | [Linux](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux) *Cloning is preferred since there are plugins* |   
+| ![Okta2Anything](./images/macos.png)  | [MacOS](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux) *Cloning is preferred since there are plugins*|   
+| ![Okta2Anything](./images/windows.png)| [Windows](https://github.com/pmcdowell-okta/okta2anything/raw/master/okta2anything.linux) *Cloning is preferred since there are plugins*  |   
 
 #### Configuring you Okta LDAP Agent
 
