@@ -1,0 +1,14 @@
+{
+  "name": "okta2anything-mongodb",
+  "version": "1.0.0",
+  "description": "On Linux,           service start mongodb       Install NPM:           npm install mongodb@2.2.5 --save       Then go to Mongo Console:           use users;           db.users.insert({\"username\":\"usertest\",\"password\":\"usertest\"});",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^2.2.5"
+  }
+}
