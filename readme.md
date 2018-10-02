@@ -60,9 +60,13 @@ that are compatible for Okta2Anything are available here.
 * Set Member Attribute to: ``member``
 * Under Validate Configuration Select Email
 
+#### LDAP Settings Screenshot
+
 !["LDAP Configuration"](./images/setupPage1.png)
 
-["Import Settings"](./images/page2.pdf)
+#### LDAP Settings *import* Screenshot
+
+!["Import Settings"](./images/setupPage2.png)
 
 Test the settings, use username of ``test@example.com``
 
