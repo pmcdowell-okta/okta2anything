@@ -60,7 +60,7 @@ that are compatible for Okta2Anything are available here.
 * Set Member Attribute to: ``member``
 * Under Validate Configuration Select Email
 
-["LDAP Configuration"](./images/setupPage1.png)
+!["LDAP Configuration"](./images/setupPage1.png)
 
 ["Import Settings"](./images/page2.pdf)
 
