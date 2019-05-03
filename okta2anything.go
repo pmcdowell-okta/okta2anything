@@ -233,7 +233,6 @@ func handleBind(w ldap.ResponseWriter, m *ldap.Message) {
 			eraseme := popFromStack(string(r.Name()))
 			fmt.Println(eraseme)
 			json.Unmarshal(out,&ldapObj)
-			pushToStack(string(r.Name()), string(out))
 
 			//fmt.Println(ldapObj.Active)
 			if ldapObj.Active=="true" {
