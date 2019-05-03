@@ -583,6 +583,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		fmt.Println(len(customAttributes))
 
 		fmt.Println(PrePlugin);
+		fmt.Println(userid);
 
 		if len(PrePlugin) !=0 {
 
@@ -592,7 +593,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 			//e.AddAttribute(message.AttributeDescription("departmentNumber"), message.AttributeValue(userid))
 			//e.AddAttribute(message.AttributeDescription("telephoneNumber"), message.AttributeValue(userid))
 
-			preout, err := exec.Command("node", "./"+PrePlugin, string("1"), "2").Output()
+			preout, err := exec.Command("node", "./"+PrePlugin, string(userid), "2").Output()
 			if err != nil {
 				fmt.Println("Error")
 				log.Fatal(err)
