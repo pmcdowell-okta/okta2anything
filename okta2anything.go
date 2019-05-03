@@ -1,4 +1,4 @@
-package main  //
+package main  //hi
 
 import (
 	"crypto/tls"
@@ -10,7 +10,7 @@ import (
 
 	ldap "github.com/vjeantet/ldapserver"
 	"strings"
-	"github.com/vjeantet/goldap/message"
+	message "github.com/vjeantet/goldap/message"
 	"time"
 	"math/rand"
 	"reflect"
@@ -54,12 +54,18 @@ var (
 	LdapPassword        string
 	Plugin        string
 	PostPlugin        string
+	verboseOutput bool
 )
+
+var stackMap = make(map[string]string) // map with username as index
+
 
 
 //end Globals
 
 func init() {
+
+	verboseOutput = false
 
 	rand.Seed(time.Now().UnixNano())  //Seed the randomizer
 
@@ -222,8 +228,13 @@ func handleBind(w ldap.ResponseWriter, m *ldap.Message) {
 				log.Fatal(err)
 			}
 
-			//fmt.Println(string(out));
+			fmt.Println(string(out));
+			pushToStack(string(r.Name()), string(out))
+			eraseme := popFromStack(string(r.Name()))
+			fmt.Println(eraseme)
 			json.Unmarshal(out,&ldapObj)
+			pushToStack(string(r.Name()), string(out))
+
 			//fmt.Println(ldapObj.Active)
 			if ldapObj.Active=="true" {
 				res := ldap.NewBindResponse(ldap.LDAPResultSuccess)
@@ -426,7 +437,6 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 	r := m.GetSearchRequest()
 
 	userid:="aaaaa"
-	//tempString:=""
 
 	log.Printf("Search DSE")
 	log.Printf("Request BaseDn=%s", r.BaseObject())
@@ -436,12 +446,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 	log.Printf("Request TimeLimit=%d", r.TimeLimit().Int())
 
 
-	//requestAttributes:=fmt.Sprintf("%s", r.Attributes());
-	//fmt.Println(requestAttributes)
 	getUuid:=fmt.Sprintf("%s",r.FilterString())
-	//fmt.Println(strings.Index(getUuid, "entryuuid="))
-
-	//fmt.Println("xxxxxxxx")
 
 	if ( strings.Index(getUuid,"entryuuid=") !=0) {
 		getUuid = strings.Replace(getUuid, "(", "", -1)
@@ -451,7 +456,6 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		entryuuidIndex := strings.Index(getUuid, "entryuuid=")
 		getUuid = getUuid[entryuuidIndex+10:]
 
-		//fmt.Println(getUuid)
 		userid=getUuid
 	} else {
 		getUuid="xxxxxxx"
@@ -475,8 +479,6 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 
 		e.AddAttribute("objectClass", "top", "organizationalUnit")
 		e.AddAttribute("ou", "Groups")
-		//e.AddAttribute("entryuuid", "8c3624f5-d219-4401-9042-9a1fbf6f1b6805")
-		//e.AddAttribute("entryuuid", getUuid) //Does not work.. forgot
 		e.AddAttribute(message.AttributeDescription( "entryuuid"), message.AttributeValue(getUuid))
 
 
@@ -487,7 +489,6 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		e.AddAttribute("objectClass", "top", "groupOfNames")
 		e.AddAttribute("cn", "ldapusers")
 
-		//e.AddAttribute("member", "uid=user.0,ou=People,dc=example,dc=com")
 		e.AddAttribute(message.AttributeDescription("member"), message.AttributeValue("uid"+userid+"=user.0,ou=People,dc=example,dc=com"))
 
 		e.AddAttribute("entryuuid", "8c3624f5-d219-4401-9042-9a1fbf6f1b6805")
@@ -506,11 +507,8 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		default:
 		}
 
-		//searchFilter:=fmt.Sprintf("%s",r.Filter())
 		log.Printf("FileterString: %s",reflect.TypeOf(r.FilterString()))
-		log.Printf("Line #314")
 
-		//s.Replace("foo", "o", "0", -1))
 		FilterString:= r.FilterString()
 		if strings.Contains(FilterString,"(&(objectclass=inetorgperson)(mail=") {
 			FilterString=strings.Replace(FilterString,"(&(objectclass=inetorgperson)(mail=", "", -1)
@@ -518,48 +516,56 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 			log.Printf("FilterString: %s",FilterString)
 			log.Printf("Line #325")
 			userid = FilterString
-			//os.Exit(0)
 		}
 
-
-		//var userid []AttributeValue = "uid=aaaaa,ou=People,dc=example,dc=com"
-
-		//		e.AddAttribute(message.AttributeDescription("member"), message.AttributeValue("uid"+userid+"=user.0,ou=People,dc=example,dc=com"))
-
-
 		e := ldap.NewSearchResultEntry("uid="+userid+",ou=People,dc=example,dc=com")
-		//e := ldap.NewSearchResultEntry("uid="+userid+",ou=People,dc=example,dc=com")
 
 		e.AddAttribute("objectClass", "top", "inetorgperson", "organizationalPerson", "person")
 		e.AddAttribute(message.AttributeDescription("givenName"), message.AttributeValue(userid))
 
-		//e.AddAttribute("givenName", "Aaccf")
-		//e.AddAttribute("distinguishedname", "wefwef")
+		if userid == "ss=person" {
 
-		//Clean up User ID
+			fmt.Println(r.BaseObject());
+			userid=fmt.Sprintf("%s",r.BaseObject())
+			fmt.Println("569: New userid = "+userid)
+
+		}
+
 		if strings.Contains(userid, "@") {
 
 		} else {
 			userid=userid+"@noemailprovided.com"
 		}
 
+		fmt.Println("Here is the userid"+userid)
+
 		e.AddAttribute(message.AttributeDescription("distinguishedname"), message.AttributeValue(userid))
-		//e.AddAttribute(message.AttributeDescription("mail"), message.AttributeValue(userid+"@example2.com"))
 		e.AddAttribute(message.AttributeDescription("mail"), message.AttributeValue(userid))
 
-		//e.AddAttribute("mail", "user.0@example.com")
 		e.AddAttribute(message.AttributeDescription("sn"), message.AttributeValue(userid))
 
-		//e.AddAttribute("sn", "user0")
 		e.AddAttribute("supportedLDAPVersion", "3")
 		e.AddAttribute("title", "title")
 		e.AddAttribute(message.AttributeDescription("uid"), message.AttributeValue(userid))
-		//e.AddAttribute("uid", "user.0")
 		e.AddAttribute("manager", "manager")
 		e.AddAttribute("streetAddress", "street")
 		e.AddAttribute("l", "USA")
 		e.AddAttribute("st", "TX")
+
+		// Add custom attributes
+
+		var customAttributes=popFromStack(userid)
+
+		for customkey, customvalue := range customAttributes {
+			fmt.Println("I'm in the Loop !!")
+			fmt.Printf("%s -> %s\n", customkey, customvalue)
+			e.AddAttribute(message.AttributeDescription(fmt.Sprintf("%s", string (customkey))),
+				message.AttributeValue(fmt.Sprintf("%s", string (customvalue))))
+
+		}
+
 		e.AddAttribute("postalCode", "11111")
+
 		e.AddAttribute("physicalDeliveryOfficeName", "x")
 		e.AddAttribute("departmentNumber", "11")
 		e.AddAttribute("telephoneNumber", "1111111")
@@ -570,14 +576,9 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		e.AddAttribute("employeeNumber", "0")
 		e.AddAttribute(message.AttributeDescription("entryuuid"),
 			message.AttributeValue(string (userid)))
-		//message.AttributeValue(string (RandInt(8)+"-"+RandInt(4)+"-"+RandInt(4)+"-"+RandInt(4)+"-"+RandInt(12))))
 
-		//e.AddAttribute("entryuuid", "0d3ce3bf-4107-3b34-9e5a-fa71deb8b503")
 		e.AddAttribute("ds-pwp-account-disabled", "")
-		//e.AddAttribute("entrydn", "user.0")
 		w.Write(e)
-		//w.Write
-
 		res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultSuccess)
 		w.Write(res)
 	}
@@ -666,6 +667,52 @@ func RandInt(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func pushToStack ( key string, jsonString string ) {
+	stackMap[key]=jsonString
+}
+
+func popFromStack ( key string) map [string]string {
+
+	fmt.Println("Looking for:",key)
+	fmt.Println(stackMap)
+
+	if val, ok := stackMap[key]; ok { //Make ure there is a match
+		//delete(stackMap, key) //remove it
+		return convertJsonStringToMap(val)
+	}
+
+	return make (map[string]string)  //Didn't find your key.. Sorry about that
+	// returning empty map
+}
+
+func convertJsonStringToMap ( jsonData string ) map [string]string {
+
+	var mapToReturn=make (map[string]string)
+
+	jsonByteArray:= []byte(jsonData)
+	var v interface{}
+	err:=json.Unmarshal(jsonByteArray, &v)
+	if err!=nil {
+		fmt.Println("****** JSON Parse Error *****\n", jsonData)
+		return mapToReturn //Something Blew up parsing the JSON
+	}
+	//fmt.Println(err)
+	data := v.(map[string]interface{})
+
+	for k, v := range data {
+		if (k!="Active") {
+			valueToString, ok := v.(string)
+			_ = ok
+			mapToReturn[string(k)] = valueToString
+		}
+	}
+
+	return mapToReturn
+
+
+
 }
 
 
