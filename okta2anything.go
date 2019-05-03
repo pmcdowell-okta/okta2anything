@@ -54,6 +54,7 @@ var (
 	LdapPassword        string
 	Plugin        string
 	PostPlugin        string
+	PrePlugin        string
 	verboseOutput bool
 )
 
@@ -65,6 +66,7 @@ var stackMap = make(map[string]string) // map with username as index
 
 func init() {
 
+
 	verboseOutput = false
 
 	rand.Seed(time.Now().UnixNano())  //Seed the randomizer
@@ -75,12 +77,14 @@ func init() {
 	password := flag.String("w", "Promiscuous Mode", "Password for Directory Manager Example: -w=Password1")
 	plugin := flag.String("plugin", "", "External Authorizer")
 	postplugin := flag.String("postplugin", "", "Post Authentication function")
+	preplugin := flag.String("preplugin", "", "Pre Authentication function")
 	flag.Parse()
 
 	//LdapBind =*binddn
 	LdapPassword=*password
 	Plugin=*plugin
 	PostPlugin=*postplugin
+	PrePlugin=*preplugin
 
 
 
@@ -227,12 +231,15 @@ func handleBind(w ldap.ResponseWriter, m *ldap.Message) {
 			if err != nil {
 				log.Fatal(err)
 			}
-
+			fmt.Println("--------------------------------------")
+			fmt.Println("230: --------------------------------------")
 			fmt.Println(string(out));
 			pushToStack(string(r.Name()), string(out))
+			fmt.Println("I think name is"+r.Name())
 			eraseme := popFromStack(string(r.Name()))
 			fmt.Println(eraseme)
 			json.Unmarshal(out,&ldapObj)
+
 
 			//fmt.Println(ldapObj.Active)
 			if ldapObj.Active=="true" {
@@ -403,6 +410,8 @@ func handleSearchDSE(w ldap.ResponseWriter, m *ldap.Message) {
 	e.AddAttribute("objectClass", "top", "extensibleObject")
 	e.AddAttribute("supportedLDAPVersion", "3")
 	e.AddAttribute("namingContexts", "dc=example,dc=com")
+	e.AddAttribute("departmentNumber", "11")
+	e.AddAttribute("telephoneNumber", "1111111")
 	// e.AddAttribute("subschemaSubentry", "cn=schema")
 	// e.AddAttribute("namingContexts", "ou=system", "ou=schema", "dc=example,dc=com", "ou=config")
 	// e.AddAttribute("supportedFeatures", "1.3.6.1.4.1.4203.1.5.1")
@@ -414,6 +423,7 @@ func handleSearchDSE(w ldap.ResponseWriter, m *ldap.Message) {
 
 	res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultSuccess)
 	w.Write(res)
+	fmt.Println("Exiting 419 !!!!!!!!!!!!!!!!\n\n")
 }
 
 func handleSearchMyCompany(w ldap.ResponseWriter, m *ldap.Message) {
@@ -457,6 +467,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 
 		userid=getUuid
 	} else {
+		fmt.Println("463: weird condition")
 		getUuid="xxxxxxx"
 	}
 
@@ -495,13 +506,17 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 
 		res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultSuccess)
 		w.Write(res)
+		fmt.Println("Exiting 500!!!! Group Search!\n\n")
 
 	} else {
+
+		fmt.Println("506: second things after groups")
 
 		// Handle Stop Signal (server stop / client disconnected / Abandoned request....)
 		select {
 		case <-m.Done:
 			log.Print("Leaving handleSearch...")
+			fmt.Println("512: Might have blown up")
 			return
 		default:
 		}
@@ -510,6 +525,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 
 		FilterString:= r.FilterString()
 		if strings.Contains(FilterString,"(&(objectclass=inetorgperson)(mail=") {
+			fmt.Println("521 trying to figure out username")
 			FilterString=strings.Replace(FilterString,"(&(objectclass=inetorgperson)(mail=", "", -1)
 			FilterString=strings.Replace(FilterString,")", "", -1)
 			log.Printf("FilterString: %s",FilterString)
@@ -520,10 +536,9 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		e := ldap.NewSearchResultEntry("uid="+userid+",ou=People,dc=example,dc=com")
 
 		e.AddAttribute("objectClass", "top", "inetorgperson", "organizationalPerson", "person")
-		e.AddAttribute(message.AttributeDescription("givenName"), message.AttributeValue(userid))
 
 		if userid == "ss=person" {
-
+			fmt.Println("trying to get userid again")
 			fmt.Println(r.BaseObject());
 			userid=fmt.Sprintf("%s",r.BaseObject())
 			fmt.Println("569: New userid = "+userid)
@@ -536,12 +551,13 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 			userid=userid+"@noemailprovided.com"
 		}
 
-		fmt.Println("Here is the userid"+userid)
+		fmt.Println("Here is the userid:"+userid)
 
 		e.AddAttribute(message.AttributeDescription("distinguishedname"), message.AttributeValue(userid))
 		e.AddAttribute(message.AttributeDescription("mail"), message.AttributeValue(userid))
 
-		e.AddAttribute(message.AttributeDescription("sn"), message.AttributeValue(userid))
+//		e.AddAttribute(message.AttributeDescription("givenName"), message.AttributeValue(userid))
+//		e.AddAttribute(message.AttributeDescription("sn"), message.AttributeValue(userid))
 
 		e.AddAttribute("supportedLDAPVersion", "3")
 		e.AddAttribute("title", "title")
@@ -555,19 +571,66 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 
 		var customAttributes=popFromStack(userid)
 
-		for customkey, customvalue := range customAttributes {
-			fmt.Println("I'm in the Loop !!")
-			fmt.Printf("%s -> %s\n", customkey, customvalue)
-			e.AddAttribute(message.AttributeDescription(fmt.Sprintf("%s", string (customkey))),
-				message.AttributeValue(fmt.Sprintf("%s", string (customvalue))))
+		fmt.Println("===============================")
+		fmt.Println("I'm adding")
+		fmt.Println("===============================")
+		fmt.Println(customAttributes)
+		fmt.Println("END adding custom")
 
+		e.AddAttribute(message.AttributeDescription("givenName"), message.AttributeValue(userid))
+		e.AddAttribute(message.AttributeDescription("sn"), message.AttributeValue(userid))
+
+		fmt.Println(len(customAttributes))
+
+		fmt.Println(PrePlugin);
+
+		if len(PrePlugin) !=0 {
+
+
+		if len(customAttributes) == 0 {
+			fmt.Println("Map is Empty")
+			//e.AddAttribute(message.AttributeDescription("departmentNumber"), message.AttributeValue(userid))
+			//e.AddAttribute(message.AttributeDescription("telephoneNumber"), message.AttributeValue(userid))
+
+			preout, err := exec.Command("node", "./"+PrePlugin, string("1"), "2").Output()
+			if err != nil {
+				fmt.Println("Error")
+				log.Fatal(err)
+			}
+
+			fmt.Println(string(preout))
+
+			preloginFields := convertJsonStringToMap(string(preout))
+
+			fmt.Println(preloginFields)
+
+			for customkey, customvalue := range preloginFields {
+				fmt.Println("598:  Adding prelogin fields")
+				fmt.Printf("%s -> %s\n", customkey, customvalue)
+				e.AddAttribute(message.AttributeDescription(fmt.Sprintf("%s", string(customkey))),
+					message.AttributeValue(fmt.Sprintf("%s", string(customvalue))))
+
+			}
 		}
 
-		e.AddAttribute("postalCode", "11111")
+		} else {
 
+			for customkey, customvalue := range customAttributes {
+				fmt.Println("I'm in the Loop !!")
+				fmt.Printf("%s -> %s\n", customkey, customvalue)
+				e.AddAttribute(message.AttributeDescription(fmt.Sprintf("%s", string(customkey))),
+					message.AttributeValue(fmt.Sprintf("%s", string(customvalue))))
+
+			}
+		}
+
+		e.AddAttribute(message.AttributeDescription(fmt.Sprintf("%s", string ("pizza"))),
+			message.AttributeValue(fmt.Sprintf("%s", string ("guidguidhere"))))
+
+		e.AddAttribute("postalCode", "11111")
 		e.AddAttribute("physicalDeliveryOfficeName", "x")
-		e.AddAttribute("departmentNumber", "11")
-		e.AddAttribute("telephoneNumber", "1111111")
+		//e.AddAttribute("departmentNumber", "11")
+		//e.AddAttribute("telephoneNumber", "1111111")
 		e.AddAttribute("mobile", "1111111")
 		e.AddAttribute("preferredLanguage", "en")
 		e.AddAttribute("postalAddress", "Austin")
@@ -580,6 +643,7 @@ func handleSearch(w ldap.ResponseWriter, m *ldap.Message) {
 		w.Write(e)
 		res := ldap.NewSearchResultDoneResponse(ldap.LDAPResultSuccess)
 		w.Write(res)
+		fmt.Println("Exiting 596 Done !! ---------------\n\n")
 	}
 
 }
@@ -669,6 +733,11 @@ func RandInt(n int) string {
 }
 
 func pushToStack ( key string, jsonString string ) {
+	fmt.Println("((((((((((((((((((((((((((((((((((((((((((")
+	fmt.Println("pushToStack adding user:"+key)
+	fmt.Println("pushToStack adding data:"+jsonString)
+	fmt.Println("((((((((((((((((((((((((((((((((((((((((((")
+
 	stackMap[key]=jsonString
 }
 
