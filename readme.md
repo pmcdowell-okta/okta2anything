@@ -11,7 +11,7 @@ This code is based on the great work by: https://github.com/vjeantet/ldapserver
 ### *Disclaimer*
 
 *Although it is not uncommon for companies to use LDAP Proxies for authentication, this code is developed for Pilots, Proof of Concepts, and testing.*
-*Anyone using this code for production is doing os at thier own risk*
+*Anyone using this code for production is doing so at thier own risk*
 
 ### How does it work ?
 
