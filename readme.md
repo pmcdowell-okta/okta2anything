@@ -13,6 +13,14 @@ This code is based on the great work by: https://github.com/vjeantet/ldapserver
 *Although it is not uncommon for companies to use LDAP Proxies for authentication, this code is developed for Pilots, Proof of Concepts, and testing.*
 *Anyone using this code for production is doing so at thier own risk*
 
+<ins>Would you be interested in a Commercially available product that can offer **LTS** (Long Term Support) ?</ins>
+
+As much as I enjoyed developing this program, it has become more popular that I would have imagined, and many folks have me for an alternative with support I just don't have the time to keep up with this project.
+
+**Beyond ID** provides a product with the same capability and can provide Support and Services to run this in production. The link below with provide you with all of the details.
+
+https://www.beyondid.com/solutions/application-integration-gateway/
+
 ### How does it work ?
 
 Okta2Anything acts like an LDAP Service. Using the Okta LDAP Agent, and pointing
